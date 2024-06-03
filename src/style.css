@@ -1,0 +1,49 @@
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.invisible {
+  display: none;
+}
+
+/* CURRENT WEATHER */
+.location-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  border: 1px solid red;
+}
+
+.temp-container {
+  grid-area: temp;
+  border: 1px solid green;
+}
+
+.condition-container {
+  grid-area: condition;
+  border: 1px solid green;
+}
+
+.wind-container {
+  grid-area: wind;
+  border: 1px solid green;
+}
+
+.precip-container {
+  grid-area: precip;
+  border: 1px solid green;
+}
+
+.current-container {
+  border: 1px solid blue;
+  display: grid;
+  grid-template-areas:
+    "temp condition"
+    "wind precip";
+}
