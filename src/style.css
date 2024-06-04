@@ -47,3 +47,45 @@ body {
     "temp condition"
     "wind precip";
 }
+
+/* FORECAST */
+/*header*/
+.date-header {
+  grid-area: date-header;
+}
+
+.time-header {
+  grid-area: time-header;
+}
+
+.condition-header {
+  grid-area: condition-header;
+}
+
+.temp-header {
+  grid-area: temp-header;
+}
+
+.precip-header {
+  grid-area: precip-header;
+}
+
+.wind-header {
+  grid-area: wind-header;
+}
+
+.day-header {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  border: 1px solid red;
+  grid-template-areas:
+    "date-header ... ... ... ... ..."
+    "time-header condition-header temp-header precip-header wind-header wind-header";
+}
+
+.hour {
+  border: 1px solid blue;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-areas: "time condition-img temp precip wind-speed wind-dir";
+}

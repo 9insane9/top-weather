@@ -1,19 +1,23 @@
 import "./style.css"
 import loading from "./loading.gif"
 
-// async function getClientIP() {
-//   const data = await fetch("https://api-bdc.net/data/client-ip", {
-//     mode: "cors",
-//   })
-//   const dataObj = await data.json()
-//   const ip = await dataObj["ipString"]
-//   console.log(ip)
-//   return ip
-// }
+async function getClientIP() {
+  const data = await fetch("https://api-bdc.net/data/client-ip", {
+    mode: "cors",
+  })
+  const dataObj = await data.json()
+  const ipString = await dataObj["ipString"]
+  console.log(`${typeof ipString} ${ipString}`)
+  return ipString
+}
 
-// const clientIP = () => {
-//   return getClientIP()
-// }
+async function initialize() {
+  const ip = await getClientIP()
+  displayCurrent(ip)
+}
+
+initialize()
+fetchForecast()
 
 const searchField = document.querySelector(".search-field")
 const searchBtn = document.querySelector(".search-btn")
@@ -80,9 +84,6 @@ function currentEls() {
   }
 }
 
-// fetchCurrent()
-displayCurrent()
-
 async function displayCurrent(searchTerm) {
   const data = await fetchCurrent(searchTerm)
   const current = data["current"]
@@ -100,4 +101,10 @@ async function displayCurrent(searchTerm) {
   currentEls().windSpeed.textContent = `${Math.round(
     Number(current["wind_kph"]) / 3.6
   )} m/s`
+}
+
+async function displayForecast() {
+  const data = await fetchForecast(searchTerm)
+  const forecast = await data["forecast"]["forecastday"]
+  console.log(forecast)
 }
