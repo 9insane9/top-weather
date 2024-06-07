@@ -1,5 +1,81 @@
 import "./style.css"
-import loading from "./loading.gif"
+import arrow from "./arrow-up.png"
+// import loading from "./loading.gif"
+
+const searchSaver = (function () {
+  let term = "tartu estonia"
+
+  return {
+    get: function () {
+      return term
+    },
+    set: function (newString) {
+      if (typeof newString === "string") {
+        term = newString
+      } else {
+        console.error("Input must be a string")
+      }
+    },
+  }
+})()
+
+const unitType = (function () {
+  let type = "metric"
+
+  function toggle() {
+    type = type === "metric" ? "imperial" : "metric"
+    return type
+  }
+
+  function getType() {
+    return type
+  }
+
+  return { toggle, getType }
+})()
+
+function toggleUnitHeaders() {
+  const tempHeaders = document.querySelectorAll(".temp-header")
+  const precipHeaders = document.querySelectorAll(".precip-header")
+  const windHeaders = document.querySelectorAll(".wind-header")
+
+  if (unitType.getType() === "metric") {
+    tempHeaders.forEach((header) => {
+      header.textContent = "Temp. °C"
+    })
+    precipHeaders.forEach((header) => {
+      header.textContent = "Precip. mm"
+    })
+    windHeaders.forEach((header) => {
+      header.textContent = "Wind (m/s)"
+    })
+  } else {
+    tempHeaders.forEach((header) => {
+      header.textContent = "Temp. °F"
+    })
+    precipHeaders.forEach((header) => {
+      header.textContent = "Precip. in"
+    })
+    windHeaders.forEach((header) => {
+      header.textContent = "Wind (mph)"
+    })
+  }
+}
+
+function toggleCurrentOrForecast() {
+  const currentContainer = document.querySelector(".current-container")
+  const forecastContainer = document.querySelector(".forecast-container")
+  const currentClasslist = currentContainer.classList
+  const forecastClasslist = forecastContainer.classList
+
+  if (currentClasslist.contains("invisible")) {
+    currentContainer.classList.remove("invisible")
+    forecastContainer.classList.add("invisible")
+  } else {
+    currentContainer.classList.add("invisible")
+    forecastContainer.classList.remove("invisible")
+  }
+}
 
 async function getClientIP() {
   const data = await fetch("https://api-bdc.net/data/client-ip", {
@@ -13,13 +89,19 @@ async function getClientIP() {
 
 async function initialize() {
   const ip = await getClientIP()
-  displayCurrent(ip)
+  displayCurrent(ip, unitType.getType())
+
+  fetchForecast(ip)
+    .then((data) => getFilteredForecast(data))
+    .then((data) => displayForecast(data, unitType.getType()))
 }
 
 initialize()
 
 const searchField = document.querySelector(".search-field")
 const searchBtn = document.querySelector(".search-btn")
+const unitBtn = document.querySelector(".btn-toggle-unit")
+const currentForecastToggleBtn = document.querySelector(".btn-current-forecast")
 
 searchField.oninput = validateSearch
 
@@ -34,9 +116,26 @@ function validateSearch() {
 
 searchBtn.addEventListener("click", (event) => {
   const searchTerm = searchField.value
-  displayCurrent(searchTerm)
-  //displayForecast(searchTerm)
+  displayCurrent(searchTerm, unitType.getType())
+
+  fetchForecast(searchTerm)
+    .then((data) => getFilteredForecast(data))
+    .then((data) => displayForecast(data, unitType.getType()))
 })
+
+unitBtn.addEventListener("click", () => {
+  unitType.toggle()
+  toggleUnitHeaders()
+  const term = searchSaver.get()
+
+  displayCurrent(term, unitType.getType())
+
+  fetchForecast(term)
+    .then((data) => getFilteredForecast(data))
+    .then((data) => displayForecast(data, unitType.getType()))
+})
+
+currentForecastToggleBtn.addEventListener("click", toggleCurrentOrForecast)
 
 // function search(location = "tartu estonia") {}
 
@@ -50,7 +149,7 @@ async function fetchCurrent(searchTerm = "Tartu estonia") {
   return responseObj
 }
 
-async function fetchForecast(searchTerm = "tartu estonia") {
+async function fetchForecast(searchTerm = "Tartu estonia") {
   const link = `http://api.weatherapi.com/v1/forecast.json?key=f80d0c3108cc4ceea9f122718243005&q=${searchTerm}&days=3&aqi=no&alerts=no`
   const response = await fetch(link, { mode: "cors" })
   const responseObj = await response.json()
@@ -104,7 +203,8 @@ function forecastEls() {
   }
 }
 
-async function displayCurrent(searchTerm) {
+async function displayCurrent(searchTerm, unitType) {
+  searchSaver.set(searchTerm)
   const data = await fetchCurrent(searchTerm)
   const current = data["current"]
   const location = data["location"]
@@ -114,27 +214,86 @@ async function displayCurrent(searchTerm) {
   currentEls().country.textContent = location["country"]
   currentEls().conditionImg.src = condition["icon"]
   currentEls().conditionText.textContent = condition["text"]
-  currentEls().temp.textContent = `${current["temp_c"]}°`
-  currentEls().feelsLike.textContent = `Feels like ${current["feelslike_c"]}°`
-  currentEls().precip.textContent = `${current["precip_mm"]} mm`
   currentEls().windDirection.textContent = current["wind_dir"]
-  currentEls().windSpeed.textContent = `${Math.round(
-    Number(current["wind_kph"]) / 3.6
-  )} m/s`
+  if (unitType === "metric") {
+    currentEls().temp.textContent = `${current["temp_c"]}°C`
+    currentEls().feelsLike.textContent = `Feels like ${current["feelslike_c"]}°C`
+    currentEls().precip.textContent = `0-${current["precip_mm"]} mm`
+    currentEls().windSpeed.textContent = `${convertKphToMs(
+      current["wind"]
+    )} m/s`
+  } else {
+    currentEls().temp.textContent = `${current["temp_f"]}°F`
+    currentEls().feelsLike.textContent = `Feels like ${current["feelslike_f"]}°F`
+    currentEls().precip.textContent = `0-${current["precip_in"]} in`
+    currentEls().windSpeed.textContent = `${Math.round(
+      Number(current["wind_mph"])
+    )} mph`
+  }
 }
 
-async function displayForecast() {
-  const data = await fetchForecast(searchTerm)
-  const forecast = await data["forecast"]["forecastday"]
-  console.log(forecast)
+function renderForecastText(nodeList, dataArr) {
+  nodeList.forEach((node, index) => {
+    node.textContent = dataArr[index]
+  })
+}
+
+function renderForecastConditions(nodeList, imgArr, textArr) {
+  nodeList.forEach((node, index) => {
+    node.src = imgArr[index]
+    node.alt = textArr[index]
+  })
+}
+
+function renderForecastWindDirection(nodeList, degreeArr, dirArr) {
+  nodeList.forEach((node, index) => {
+    node.src = arrow
+    node.style.transform = `rotate(${degreeArr[index]}deg)`
+    node.alt = dirArr[index]
+  })
+}
+
+function renderForecastWindSpeedMs(nodeList, speedKphArr) {
+  nodeList.forEach((node, index) => {
+    node.textContent = convertKphToMs(speedKphArr[index])
+  })
+}
+
+function convertKphToMs(numOrNumString) {
+  return Math.round(Number(numOrNumString) / 3.6)
+}
+
+function displayForecast(data, unitType) {
+  renderForecastText(forecastEls().dateHeaders, data["datesArr"])
+  renderForecastText(forecastEls().times, data["timeArr"])
+  renderForecastConditions(
+    forecastEls().conditionImgs,
+    data["conditionIconArr"],
+    data["conditionTextArr"]
+  )
+  renderForecastWindDirection(
+    forecastEls().windDirs,
+    data["windDegreeArr"],
+    data["windDirArr"]
+  )
+  if (unitType === "metric") {
+    renderForecastText(forecastEls().temps, data["tempCarr"])
+    renderForecastText(forecastEls().precips, data["precipMmArr"])
+    renderForecastWindSpeedMs(forecastEls().windSpeeds, data["windKphArr"])
+  } else {
+    renderForecastText(forecastEls().temps, data["tempFarr"])
+    renderForecastText(forecastEls().precips, data["precipInArr"])
+    renderForecastWindSpeedMs(forecastEls().windSpeeds, data["windMphArr"])
+  }
 }
 
 fetchForecast()
 
 //filter data
-async function filteredForecast() {
+async function getFilteredForecast() {
   const data = await fetchForecast()
   const filteredData = {
+    datesArr: getDatesArr(data),
     timeArr: getParameterArr(data, "time"),
     conditionTextArr: getParameterArr(data, "condition", "text"),
     conditionIconArr: getParameterArr(data, "condition", "icon"),
@@ -181,4 +340,4 @@ function getParameterArr(data, parameter, parameter2 = null) {
   return parameterArr
 }
 
-filteredForecast()
+// getFilteredForecast()

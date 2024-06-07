@@ -8,10 +8,6 @@ body {
   padding: 0;
 }
 
-.invisible {
-  display: none;
-}
-
 /* CURRENT WEATHER */
 .location-container {
   display: flex;
@@ -88,4 +84,14 @@ body {
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
   grid-template-areas: "time condition-img temp precip wind-speed wind-dir";
+}
+
+.condition-img,
+.wind-dir {
+  height: 30px;
+  width: auto;
+}
+
+.invisible {
+  display: none;
 }

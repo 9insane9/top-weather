@@ -12,8 +12,8 @@
         <button class="search-btn" disabled>SEARCH</button>
       </div>
       <div class="tab-btn-container">
-        <button class="btn-current">CURRENT</button>
-        <button class="btn-forecast">FORECAST</button>
+        <button class="btn-current-forecast">CURRENT/FORECAST</button>
+        <button class="btn-toggle-unit">METRIC/IMPERIAL</button>
       </div>
       <div class="location-container">
         <p class="name"></p>
@@ -39,15 +39,15 @@
         <p class="current-wind-speed"></p>
       </div>
     </div>
-    <div class="forecast-container">
+    <div class="forecast-container invisible">
       <div class="day day-one">
         <div class="day-header">
           <p class="date-header">Date placeholder</p>
           <p class="time-header">Time</p>
           <p class="condition-header">Cond.</p>
-          <p class="temp-header">Temp. C</p>
+          <p class="temp-header">Temp. °C</p>
           <p class="precip-header">Precip. mm</p>
-          <p class="wind-header">Wind m/s</p>
+          <p class="wind-header">Wind (m/s)</p>
         </div>
         <div class="hour hour-0">
           <p class="time">...</p>
@@ -55,7 +55,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-1">
           <p class="time">...</p>
@@ -63,7 +63,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-2">
           <p class="time">...</p>
@@ -71,7 +71,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-3">
           <p class="time">...</p>
@@ -79,7 +79,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-4">
           <p class="time">...</p>
@@ -87,7 +87,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-5">
           <p class="time">...</p>
@@ -95,7 +95,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-6">
           <p class="time">...</p>
@@ -103,7 +103,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-7">
           <p class="time">...</p>
@@ -111,7 +111,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-8">
           <p class="time">...</p>
@@ -119,7 +119,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-9">
           <p class="time">...</p>
@@ -127,7 +127,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-10">
           <p class="time">...</p>
@@ -135,7 +135,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-11">
           <p class="time">...</p>
@@ -143,7 +143,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-12">
           <p class="time">...</p>
@@ -151,7 +151,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-13">
           <p class="time">...</p>
@@ -159,7 +159,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-14">
           <p class="time">...</p>
@@ -167,7 +167,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-15">
           <p class="time">...</p>
@@ -175,7 +175,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-16">
           <p class="time">...</p>
@@ -183,7 +183,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-17">
           <p class="time">...</p>
@@ -191,7 +191,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-18">
           <p class="time">...</p>
@@ -199,7 +199,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-19">
           <p class="time">...</p>
@@ -207,7 +207,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-20">
           <p class="time">...</p>
@@ -215,7 +215,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-21">
           <p class="time">...</p>
@@ -223,7 +223,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-22">
           <p class="time">...</p>
@@ -231,7 +231,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-23">
           <p class="time">...</p>
@@ -239,7 +239,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
       </div>
       <div class="day day-two">
@@ -257,7 +257,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-1">
           <p class="time">...</p>
@@ -265,7 +265,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-2">
           <p class="time">...</p>
@@ -273,7 +273,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-3">
           <p class="time">...</p>
@@ -281,7 +281,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-4">
           <p class="time">...</p>
@@ -289,7 +289,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-5">
           <p class="time">...</p>
@@ -297,7 +297,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-6">
           <p class="time">...</p>
@@ -305,7 +305,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-7">
           <p class="time">...</p>
@@ -313,7 +313,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-8">
           <p class="time">...</p>
@@ -321,7 +321,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-9">
           <p class="time">...</p>
@@ -329,7 +329,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-10">
           <p class="time">...</p>
@@ -337,7 +337,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-11">
           <p class="time">...</p>
@@ -345,7 +345,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-12">
           <p class="time">...</p>
@@ -353,7 +353,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-13">
           <p class="time">...</p>
@@ -361,7 +361,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-14">
           <p class="time">...</p>
@@ -369,7 +369,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-15">
           <p class="time">...</p>
@@ -377,7 +377,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-16">
           <p class="time">...</p>
@@ -385,7 +385,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-17">
           <p class="time">...</p>
@@ -393,7 +393,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-18">
           <p class="time">...</p>
@@ -401,7 +401,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-19">
           <p class="time">...</p>
@@ -409,7 +409,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-20">
           <p class="time">...</p>
@@ -417,7 +417,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-21">
           <p class="time">...</p>
@@ -425,7 +425,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-22">
           <p class="time">...</p>
@@ -433,7 +433,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-23">
           <p class="time">...</p>
@@ -441,7 +441,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
       </div>
       <div class="day day-three">
@@ -459,7 +459,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-1">
           <p class="time">...</p>
@@ -467,7 +467,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-2">
           <p class="time">...</p>
@@ -475,7 +475,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-3">
           <p class="time">...</p>
@@ -483,7 +483,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-4">
           <p class="time">...</p>
@@ -491,7 +491,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-5">
           <p class="time">...</p>
@@ -499,7 +499,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-6">
           <p class="time">...</p>
@@ -507,7 +507,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-7">
           <p class="time">...</p>
@@ -515,7 +515,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-8">
           <p class="time">...</p>
@@ -523,7 +523,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-9">
           <p class="time">...</p>
@@ -531,7 +531,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-10">
           <p class="time">...</p>
@@ -539,7 +539,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-11">
           <p class="time">...</p>
@@ -547,7 +547,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-12">
           <p class="time">...</p>
@@ -555,7 +555,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-13">
           <p class="time">...</p>
@@ -563,7 +563,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-14">
           <p class="time">...</p>
@@ -571,7 +571,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-15">
           <p class="time">...</p>
@@ -579,7 +579,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-16">
           <p class="time">...</p>
@@ -587,7 +587,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-17">
           <p class="time">...</p>
@@ -595,7 +595,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-18">
           <p class="time">...</p>
@@ -603,7 +603,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-19">
           <p class="time">...</p>
@@ -611,7 +611,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-20">
           <p class="time">...</p>
@@ -619,7 +619,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-21">
           <p class="time">...</p>
@@ -627,7 +627,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-22">
           <p class="time">...</p>
@@ -635,7 +635,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
         <div class="hour hour-23">
           <p class="time">...</p>
@@ -643,7 +643,7 @@
           <p class="temp">...</p>
           <p class="precip">...</p>
           <p class="wind-speed">...</p>
-          <p class="wind-dir">...</p>
+          <img class="wind-dir" src="" alt="" />
         </div>
       </div>
     </div>
