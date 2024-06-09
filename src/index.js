@@ -1,6 +1,17 @@
 import "./style.css"
+import { format } from "date-fns"
 import arrow from "./arrow-up.png"
-// import loading from "./loading.gif"
+import loading from "./loading.gif"
+
+const searchField = document.querySelector(".search-field")
+const searchBtn = document.querySelector(".search-btn")
+const unitBtn = document.querySelector(".btn-toggle-unit")
+const currentForecastToggleBtn = document.querySelector(".btn-current-forecast")
+const loadingDialog = document.querySelector(".loading")
+const loadingGif = document.querySelector(".loading-gif")
+loadingGif.src = loading
+
+searchField.oninput = validateSearch
 
 const searchSaver = (function () {
   let term = "tartu estonia"
@@ -83,11 +94,19 @@ async function getClientIP() {
   })
   const dataObj = await data.json()
   const ipString = await dataObj["ipString"]
-  console.log(`${typeof ipString} ${ipString}`)
   return ipString
 }
 
+//loading function
+function loadingScreen() {
+  loadingDialog.classList.remove("invisible")
+  loadingDialog.showModal()
+  setTimeout(() => loadingDialog.close(), 1000)
+  setTimeout(() => loadingDialog.classList.add("invisible"), 1000)
+}
+
 async function initialize() {
+  loadingScreen()
   const ip = await getClientIP()
   displayCurrent(ip, unitType.getType())
 
@@ -97,13 +116,6 @@ async function initialize() {
 }
 
 initialize()
-
-const searchField = document.querySelector(".search-field")
-const searchBtn = document.querySelector(".search-btn")
-const unitBtn = document.querySelector(".btn-toggle-unit")
-const currentForecastToggleBtn = document.querySelector(".btn-current-forecast")
-
-searchField.oninput = validateSearch
 
 function validateSearch() {
   const term = searchField.value
@@ -115,6 +127,7 @@ function validateSearch() {
 }
 
 searchBtn.addEventListener("click", (event) => {
+  loadingScreen()
   const searchTerm = searchField.value
   displayCurrent(searchTerm, unitType.getType())
 
@@ -137,15 +150,11 @@ unitBtn.addEventListener("click", () => {
 
 currentForecastToggleBtn.addEventListener("click", toggleCurrentOrForecast)
 
-// function search(location = "tartu estonia") {}
-
-// document.querySelector("iframe").src = loading
-
+//core functions
 async function fetchCurrent(searchTerm = "Tartu estonia") {
   const link = `https://api.weatherapi.com/v1/current.json?key=f80d0c3108cc4ceea9f122718243005&q=${searchTerm}&aqi=no`
   const response = await fetch(link, { mode: "cors" })
   const responseObj = await response.json()
-  console.log(responseObj)
   return responseObj
 }
 
@@ -153,7 +162,6 @@ async function fetchForecast(searchTerm = "Tartu estonia") {
   const link = `http://api.weatherapi.com/v1/forecast.json?key=f80d0c3108cc4ceea9f122718243005&q=${searchTerm}&days=3&aqi=no&alerts=no`
   const response = await fetch(link, { mode: "cors" })
   const responseObj = await response.json()
-  console.log(responseObj)
   return responseObj
 }
 
@@ -209,29 +217,56 @@ async function displayCurrent(searchTerm, unitType) {
   const current = data["current"]
   const location = data["location"]
   const condition = data["current"]["condition"]
+  console.log(current)
   currentEls().name.textContent = location["name"]
   currentEls().region.textContent = location["region"]
   currentEls().country.textContent = location["country"]
   currentEls().conditionImg.src = condition["icon"]
   currentEls().conditionText.textContent = condition["text"]
-  currentEls().windDirection.textContent = current["wind_dir"]
+  currentEls().windDirection.src = arrow
+  currentEls().windDirection.style.transform = `rotate(${current["wind_degree"]}deg)`
   if (unitType === "metric") {
     currentEls().temp.textContent = `${current["temp_c"]}°C`
     currentEls().feelsLike.textContent = `Feels like ${current["feelslike_c"]}°C`
-    currentEls().precip.textContent = `0-${current["precip_mm"]} mm`
+    currentEls().precip.textContent = `0 - ${current["precip_mm"]} mm`
     currentEls().windSpeed.textContent = `${convertKphToMs(
-      current["wind"]
+      current["wind_kph"]
     )} m/s`
   } else {
     currentEls().temp.textContent = `${current["temp_f"]}°F`
     currentEls().feelsLike.textContent = `Feels like ${current["feelslike_f"]}°F`
-    currentEls().precip.textContent = `0-${current["precip_in"]} in`
+    currentEls().precip.textContent = `0 - ${current["precip_in"]} in`
     currentEls().windSpeed.textContent = `${Math.round(
       Number(current["wind_mph"])
     )} mph`
   }
 }
 
+function displayForecast(data, unitType) {
+  renderForecastText(forecastEls().dateHeaders, data["datesArr"])
+  renderForecastText(forecastEls().times, data["timeArr"])
+  renderForecastConditions(
+    forecastEls().conditionImgs,
+    data["conditionIconArr"],
+    data["conditionTextArr"]
+  )
+  renderForecastWindDirection(
+    forecastEls().windDirs,
+    data["windDegreeArr"],
+    data["windDirArr"]
+  )
+  if (unitType === "metric") {
+    renderForecastText(forecastEls().temps, data["tempCarr"])
+    renderForecastText(forecastEls().precips, data["precipMmArr"])
+    renderForecastWindSpeedMs(forecastEls().windSpeeds, data["windKphArr"])
+  } else {
+    renderForecastText(forecastEls().temps, data["tempFarr"])
+    renderForecastText(forecastEls().precips, data["precipInArr"])
+    renderForecastWindSpeedMs(forecastEls().windSpeeds, data["windMphArr"])
+  }
+}
+
+//render functions
 function renderForecastText(nodeList, dataArr) {
   nodeList.forEach((node, index) => {
     node.textContent = dataArr[index]
@@ -263,33 +298,7 @@ function convertKphToMs(numOrNumString) {
   return Math.round(Number(numOrNumString) / 3.6)
 }
 
-function displayForecast(data, unitType) {
-  renderForecastText(forecastEls().dateHeaders, data["datesArr"])
-  renderForecastText(forecastEls().times, data["timeArr"])
-  renderForecastConditions(
-    forecastEls().conditionImgs,
-    data["conditionIconArr"],
-    data["conditionTextArr"]
-  )
-  renderForecastWindDirection(
-    forecastEls().windDirs,
-    data["windDegreeArr"],
-    data["windDirArr"]
-  )
-  if (unitType === "metric") {
-    renderForecastText(forecastEls().temps, data["tempCarr"])
-    renderForecastText(forecastEls().precips, data["precipMmArr"])
-    renderForecastWindSpeedMs(forecastEls().windSpeeds, data["windKphArr"])
-  } else {
-    renderForecastText(forecastEls().temps, data["tempFarr"])
-    renderForecastText(forecastEls().precips, data["precipInArr"])
-    renderForecastWindSpeedMs(forecastEls().windSpeeds, data["windMphArr"])
-  }
-}
-
-fetchForecast()
-
-//filter data
+//data filtering functions
 async function getFilteredForecast() {
   const data = await fetchForecast()
   const filteredData = {
@@ -315,10 +324,14 @@ async function getFilteredForecast() {
 
 function getDatesArr(data) {
   const datesArr = []
-  datesArr.push(data["forecast"]["forecastday"]["0"]["date"])
-  datesArr.push(data["forecast"]["forecastday"]["1"]["date"])
-  datesArr.push(data["forecast"]["forecastday"]["2"]["date"])
-  console.log(datesArr)
+  const date1 = new Date(
+    Date.parse(data["forecast"]["forecastday"]["0"]["date"])
+  )
+  const date2 = Date.parse(data["forecast"]["forecastday"]["1"]["date"])
+  const date3 = Date.parse(data["forecast"]["forecastday"]["2"]["date"])
+  datesArr.push(`${format(date1, "do MMMM yyyy")}`)
+  datesArr.push(`${format(date2, "do MMMM yyyy")}`)
+  datesArr.push(`${format(date3, "do MMMM yyyy")}`)
   return datesArr
 }
 
@@ -329,15 +342,18 @@ function getParameterArr(data, parameter, parameter2 = null) {
   allDays.forEach((day) => {
     day["hour"].forEach((hour) => {
       if (parameter2 === null) {
-        parameterArr.push(hour[parameter])
+        if (parameter === "time") {
+          parameterArr.push(hour[parameter].slice(-5))
+        } else if (parameter.includes("precip")) {
+          parameterArr.push(`0 - ${hour[parameter]}`)
+        } else {
+          parameterArr.push(hour[parameter])
+        }
       } else {
         parameterArr.push(hour[parameter][parameter2])
       }
     })
   })
 
-  console.log(parameterArr)
   return parameterArr
 }
-
-// getFilteredForecast()

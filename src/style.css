@@ -8,12 +8,30 @@ body {
   padding: 0;
 }
 
+body {
+  max-width: 800px;
+}
+/* LOADING SCREEN */
+
+.loading {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* CURRENT WEATHER */
 .location-container {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
   border: 1px solid red;
+}
+
+.current-container {
+  min-height: 600px;
 }
 
 .temp-container {
