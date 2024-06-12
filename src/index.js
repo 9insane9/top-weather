@@ -110,16 +110,16 @@ function validateSearch() {
 
 async function toggleUnits() {
   unitType.toggle()
-  const term = searchSaver.get()
+  const searchTerm = searchSaver.get()
   const currentUnitType = unitType.get()
 
   display.toggleUnitHeaders(currentUnitType)
 
-  fetchCurrent(term).then((data) =>
+  fetchCurrent(searchTerm).then((data) =>
     display.displayCurrent(data, currentUnitType)
   )
 
-  fetchForecast(term)
+  fetchForecast(searchTerm)
     .then((data) => filter.getFilteredForecast(data))
     .then((data) => display.displayForecast(data, currentUnitType))
 }
