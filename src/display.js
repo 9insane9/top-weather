@@ -72,6 +72,33 @@ export const display = (function () {
     }
   }
 
+  function toggleUnitHeaders(currentUnitType) {
+    const tempHeaders = document.querySelectorAll(".temp-header")
+    const precipHeaders = document.querySelectorAll(".precip-header")
+    const windHeaders = document.querySelectorAll(".wind-header")
+
+    if (currentUnitType === "metric") {
+      tempHeaders.forEach((header) => {
+        header.textContent = "Temp. °C"
+      })
+      precipHeaders.forEach((header) => {
+        header.textContent = "Precip. mm"
+      })
+      windHeaders.forEach((header) => {
+        header.textContent = "Wind (m/s)"
+      })
+    } else {
+      tempHeaders.forEach((header) => {
+        header.textContent = "Temp. °F"
+      })
+      precipHeaders.forEach((header) => {
+        header.textContent = "Precip. in"
+      })
+      windHeaders.forEach((header) => {
+        header.textContent = "Wind (mph)"
+      })
+    }
+  }
   //main render functions
   function displayCurrent(data, unitType) {
     const current = data["current"]
@@ -163,6 +190,7 @@ export const display = (function () {
   return {
     loadingScreen,
     toggleCurrentOrForecast,
+    toggleUnitHeaders,
     displayCurrent,
     displayForecast,
   }
