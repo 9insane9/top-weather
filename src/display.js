@@ -129,6 +129,9 @@ export const display = (function () {
         Number(current["wind_mph"])
       )} mph`
     }
+
+    //render appropriate background
+    setBackground()
   }
 
   function displayForecast(data, unitType) {
@@ -206,7 +209,6 @@ export const display = (function () {
     const currentHourNumber = currentDate.getHours()
 
     hoursNodeList.forEach((hourContainer) => {
-      console.log(hourContainer.children[0])
       const childHourFullString = hourContainer.children[0].textContent
       const childHourShortString = childHourFullString.slice(0, 2)
       const childHourNumber = Number(childHourShortString)
@@ -215,6 +217,47 @@ export const display = (function () {
         hourContainer.classList.add("invisible")
       }
     })
+  }
+
+  //dynamic background
+  function setBackground() {
+    const htmlEl = document.documentElement
+    const currentCondition =
+      currentEls().conditionText.textContent.toLowerCase()
+    console.log(currentCondition)
+    let image
+
+    if (currentCondition.includes("rain")) {
+      image = background.rainy
+    } else if (
+      currentCondition.includes("overcast") ||
+      currentCondition.includes("cloudy")
+    ) {
+      image = background.cloudy
+    } else if (currentCondition.includes("sunny")) {
+      image = background.sunny
+    } else if (currentCondition.includes("clear")) {
+      image = background.nightClear
+    } else if (currentCondition.includes("thunder")) {
+      image = background.thunder
+    } else {
+      image = background.sunny
+    }
+
+    htmlEl.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.85)), url(${image})`
+  }
+
+  const background = {
+    rainy:
+      "https://images.pexels.com/photos/243971/pexels-photo-243971.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    cloudy:
+      "https://images.pexels.com/photos/12498026/pexels-photo-12498026.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    sunny:
+      "https://images.pexels.com/photos/912364/pexels-photo-912364.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    nightClear:
+      "https://images.pexels.com/photos/25606279/pexels-photo-25606279/free-photo-of-stars-on-night-sky-over-sea-coast.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    thunder:
+      "https://images.pexels.com/photos/1118869/pexels-photo-1118869.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
   }
 
   return {

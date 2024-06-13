@@ -6,6 +6,10 @@ html,
 body {
   margin: 0;
   padding: 0;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 body {
@@ -20,13 +24,6 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-/* wind arrows */
-
-.current-wind-direction,
-.wind-dir {
-  fill: #00ffff;
 }
 
 /* CURRENT WEATHER */
@@ -120,4 +117,17 @@ body {
 
 .invisible {
   display: none;
+}
+
+/* wind arrows */
+.current-wind-direction,
+.wind-dir {
+}
+
+.current-wind-direction {
+  height: 100px;
+  width: auto;
+}
+
+.wind-dir {
 }
