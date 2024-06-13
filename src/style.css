@@ -22,7 +22,15 @@ body {
   justify-content: center;
 }
 
+/* wind arrows */
+
+.current-wind-direction,
+.wind-dir {
+  fill: #00ffff;
+}
+
 /* CURRENT WEATHER */
+
 .location-container {
   display: flex;
   flex-wrap: wrap;

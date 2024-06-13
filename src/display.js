@@ -1,5 +1,5 @@
 import loading from "./loading.gif"
-import arrow from "./arrow-up.png"
+import arrow from "./arrow-up.svg"
 
 export const display = (function () {
   function loadingScreen() {
@@ -155,6 +155,12 @@ export const display = (function () {
       renderForecastText(forecastEls().precips, data["precipInArr"])
       renderForecastWindSpeedMs(forecastEls().windSpeeds, data["windMphArr"])
     }
+
+    //reset visibility and hide forecast data older than current hour
+    const firstDayHoursNodeList = document.querySelectorAll(".day-one > .hour")
+
+    resetFirstDayVisibility(firstDayHoursNodeList)
+    hideOlderThanCurrentHour(firstDayHoursNodeList)
   }
   //render helper functions
   function renderForecastText(nodeList, dataArr) {
@@ -187,6 +193,30 @@ export const display = (function () {
   function convertKphToMs(numOrNumString) {
     return Math.round(Number(numOrNumString) / 3.6)
   }
+
+  //old info filter
+  function resetFirstDayVisibility(hoursNodeList) {
+    hoursNodeList.forEach((hourContainer) => {
+      hourContainer.classList.remove("invisible")
+    })
+  }
+
+  function hideOlderThanCurrentHour(hoursNodeList) {
+    const currentDate = new Date()
+    const currentHourNumber = currentDate.getHours()
+
+    hoursNodeList.forEach((hourContainer) => {
+      console.log(hourContainer.children[0])
+      const childHourFullString = hourContainer.children[0].textContent
+      const childHourShortString = childHourFullString.slice(0, 2)
+      const childHourNumber = Number(childHourShortString)
+
+      if (childHourNumber < currentHourNumber) {
+        hourContainer.classList.add("invisible")
+      }
+    })
+  }
+
   return {
     loadingScreen,
     toggleCurrentOrForecast,

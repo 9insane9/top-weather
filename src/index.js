@@ -89,8 +89,10 @@ async function initialize() {
 async function search() {
   display.loadingScreen()
   searchSaver.set(searchField.value)
+
   const searchTerm = searchSaver.get()
   const currentUnitType = unitType.get()
+
   fetchCurrent(searchTerm).then((data) =>
     display.displayCurrent(data, currentUnitType)
   )
