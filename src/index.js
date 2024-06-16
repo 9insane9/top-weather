@@ -34,23 +34,71 @@ const unitType = (function () {
     return type
   }
 
-  return { toggle, get }
+  function set(newType) {
+    if (newType === "metric" || newType === "imperial") {
+      type = newType
+    } else {
+      console.log("Invalid unit type")
+    }
+  }
+
+  return { toggle, get, set }
+})()
+
+const errorHandler = (function () {
+  const errorEl = document.querySelector(".error")
+
+  function reset() {
+    errorEl.textContent = ""
+  }
+
+  function set(errorText) {
+    errorEl.textContent = errorText
+  }
+
+  function handle(error) {
+    set(error.message)
+    console.error("Error:", error)
+  }
+
+  return { reset, set, handle }
 })()
 
 initialize()
 
-async function fetchCurrent(searchTerm = "Tartu estonia") {
-  const link = `https://api.weatherapi.com/v1/current.json?key=f80d0c3108cc4ceea9f122718243005&q=${searchTerm}&aqi=no`
-  const response = await fetch(link, { mode: "cors" })
-  const responseObj = await response.json()
-  return responseObj
+async function fetchCurrent(searchTerm = "London") {
+  try {
+    const link = `https://api.weatherapi.com/v1/current.json?key=f80d0c3108cc4ceea9f122718243005&q=${searchTerm}&aqi=no`
+    const response = await fetch(link, { mode: "cors" })
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`)
+    }
+
+    const responseObj = await response.json()
+    console.log(responseObj)
+    return responseObj
+  } catch (error) {
+    console.error("Error fetching current weather:", error.message)
+    throw error
+  }
 }
 
-async function fetchForecast(searchTerm = "Tartu estonia") {
-  const link = `http://api.weatherapi.com/v1/forecast.json?key=f80d0c3108cc4ceea9f122718243005&q=${searchTerm}&days=3&aqi=no&alerts=no`
-  const response = await fetch(link, { mode: "cors" })
-  const responseObj = await response.json()
-  return responseObj
+async function fetchForecast(searchTerm = "London") {
+  try {
+    const link = `https://api.weatherapi.com/v1/forecast.json?key=f80d0c3108cc4ceea9f122718243005&q=${searchTerm}&days=3&aqi=no&alerts=no`
+    const response = await fetch(link, { mode: "cors" })
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`)
+    }
+
+    const responseObj = await response.json()
+    return responseObj
+  } catch (error) {
+    console.error("Error fetching weather forecast:", error.message)
+    throw error
+  }
 }
 
 async function getClientIP() {
@@ -78,28 +126,37 @@ async function initialize() {
 
   //fetch and display data
   const ip = await getClientIP()
-  const currentUnitType = unitType.get()
-  fetchCurrent(ip).then((data) => display.displayCurrent(data, currentUnitType))
+  // const test = "tartu"
+  searchSaver.set(ip)
+  fetchCurrent(ip)
+    .then((data) => setUnitBasedOnLocation(data))
+    .then((data) => display.displayCurrent(data, unitType.get()))
 
   fetchForecast(ip)
     .then((data) => filter.getFilteredForecast(data))
-    .then((data) => display.displayForecast(data, currentUnitType))
+    .then((data) => display.displayForecast(data, unitType.get()))
 }
 
 async function search() {
   display.loadingScreen()
+  errorHandler.reset()
   searchSaver.set(searchField.value)
 
   const searchTerm = searchSaver.get()
   const currentUnitType = unitType.get()
 
-  fetchCurrent(searchTerm).then((data) =>
-    display.displayCurrent(data, currentUnitType)
-  )
+  fetchCurrent(searchTerm)
+    .then((data) => display.displayCurrent(data, currentUnitType))
+    .catch((data) => {
+      errorHandler.handle(data)
+    })
 
   fetchForecast(searchTerm)
     .then((data) => filter.getFilteredForecast(data))
     .then((data) => display.displayForecast(data, currentUnitType))
+    .catch((data) => {
+      errorHandler.handle(data)
+    })
 }
 
 function validateSearch() {
@@ -124,4 +181,20 @@ async function toggleUnits() {
   fetchForecast(searchTerm)
     .then((data) => filter.getFilteredForecast(data))
     .then((data) => display.displayForecast(data, currentUnitType))
+}
+
+async function setUnitBasedOnLocation(data) {
+  const country = await data["location"]["country"]
+  if (
+    country === "United States of America" ||
+    country === "Liberia" ||
+    country === "Myanmar"
+  ) {
+    unitType.set("imperial")
+    display.setUnitBtnText(unitType.get())
+    return data
+  }
+  unitType.set("metric")
+  display.setUnitBtnText(unitType.get())
+  return data
 }

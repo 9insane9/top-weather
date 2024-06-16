@@ -10,71 +10,204 @@ body {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  background-attachment: fixed;
+  color: #fff5e1;
 }
 
 body {
   max-width: 800px;
+  margin: 0 auto;
 }
-/* LOADING SCREEN */
+/* LOADING SCREEN, ERROR */
 
 .loading {
-  width: 100%;
-  height: 100%;
-  border: none;
   display: flex;
+  flex-grow: 1;
   align-items: center;
   justify-content: center;
+  background-color: black;
 }
 
-/* CURRENT WEATHER */
+.error {
+  color: red;
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+}
+
+/* TOP */
+
+.header {
+  margin: 0 auto;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.search-container {
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+}
+
+.search-btn {
+  border: none;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 10px;
+  margin-left: 10px;
+  font-size: 1.2rem;
+  text-align: center;
+  color: #fff5e1;
+  background-color: #4888ff;
+}
+
+:disabled {
+  border: 1px solid red;
+  background-color: black;
+}
+
+.search-field {
+  border: none;
+  width: clamp(100px, 80vw, 300px);
+  height: 2rem;
+  font-size: 1.2rem;
+  padding-left: 10px;
+  border-radius: 10px;
+  color: #fff5e1;
+  background-color: #4888ff;
+}
+
+.search-field:focus {
+  outline: none;
+  border: 1px solid #fff5e1;
+}
+
+.tab-btn-container {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-current-forecast,
+.btn-toggle-unit {
+  width: clamp(40px, 30vh, 100px);
+  height: 30px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.2rem;
+  background-color: #4888ff;
+  color: #fff5e1;
+}
+
+.btn-current-forecast:hover,
+.btn-toggle-unit:hover,
+.search-btn:hover:not(:disabled) {
+  background-color: #3260b4;
+  cursor: pointer;
+}
+
+/* LOCATION */
 
 .location-container {
   display: flex;
   flex-wrap: wrap;
+  align-self: flex-start;
+  padding-left: 20px;
   gap: 20px;
-  border: 1px solid red;
+  font-size: 1.25rem;
 }
+/* CURRENT WEATHER */
 
 .current-container {
-  min-height: 600px;
-}
-
-.temp-container {
-  grid-area: temp;
-  border: 1px solid green;
-}
-
-.condition-container {
-  grid-area: condition;
-  border: 1px solid green;
-}
-
-.wind-container {
-  grid-area: wind;
-  border: 1px solid green;
-}
-
-.precip-container {
-  grid-area: precip;
-  border: 1px solid green;
-}
-
-.current-container {
-  border: 1px solid blue;
+  border: 1px solid #fff5e1;
+  border-radius: 10px;
   display: grid;
+  min-height: 500px;
   grid-template-areas:
     "temp condition"
     "wind precip";
 }
 
+/* temp */
+
+.temp-container {
+  grid-area: temp;
+  display: flex;
+  flex-direction: column;
+  padding-left: 20px;
+  padding-top: 30px;
+  /* border: 1px solid green; */
+}
+
+.current-temp {
+  font-size: 3rem;
+  align-self: flex-start;
+  margin: 0;
+  padding-top: 10px;
+}
+
+.feels-like {
+}
+
+/* condition */
+
+.condition-container {
+  grid-area: condition;
+  /* border: 1px solid green; */
+  display: flex;
+  flex-direction: column;
+  padding-top: 25px;
+}
+
+.current-condition-img {
+  width: 5rem;
+  height: auto;
+}
+
+.current-condition-text {
+  padding-left: 20px;
+}
+
+/* wind */
+
+.wind-container {
+  grid-area: wind;
+  /* border: 1px solid green; */
+  padding-left: 25px;
+  margin-top: -60px;
+}
+
+/* precipitation */
+
+.precip-container {
+  grid-area: precip;
+  /* border: 1px solid green; */
+  padding-left: 20px;
+  padding-top: 10px;
+}
+
 /* FORECAST */
+
+/* EVERY DAY BRO */
+.day {
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border: 1px solid #fff5e1;
+  border-radius: 10px;
+  background: linear-gradient(rgba(0, 0, 0, 0.295), hsla(218, 28%, 21%, 0.212));
+}
+
 /*header*/
 .date-header {
   grid-area: date-header;
+  padding-left: 10px;
+  font-size: 1.25rem;
 }
 
 .time-header {
   grid-area: time-header;
+  text-align: center;
 }
 
 .condition-header {
@@ -91,32 +224,64 @@ body {
 
 .wind-header {
   grid-area: wind-header;
+  text-align: center;
 }
 
 .day-header {
+  margin-top: 20px;
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
-  border: 1px solid red;
   grid-template-areas:
-    "date-header ... ... ... ... ..."
+    "date-header date-header ... ... ... ..."
     "time-header condition-header temp-header precip-header wind-header wind-header";
 }
 
+/* FORECAST DETAILS */
 .hour {
-  border: 1px solid blue;
+  /* border-bottom: 1px solid blue; */
   display: grid;
+  align-items: center;
   grid-template-columns: repeat(6, minmax(0, 1fr));
   grid-template-areas: "time condition-img temp precip wind-speed wind-dir";
 }
 
-.condition-img,
-.wind-dir {
-  height: 30px;
-  width: auto;
+/* .hour::after {
+  content: "";
+  display: block;
+  margin: 0 auto;
+  padding-top: 5px;
+  border-bottom: 2px solid #bac1db;
+} */
+
+.time {
+  text-align: center;
 }
 
-.invisible {
-  display: none;
+.condition-img,
+.wind-dir {
+  display: flex;
+  flex-direction: column;
+  height: 30px;
+  width: auto;
+  justify-content: center;
+  /* align-items: center; */
+}
+
+.temp {
+  color: #4888ff;
+}
+
+.warm {
+  color: #ff0000;
+}
+
+.precip {
+  color: #3abef9;
+}
+
+.wind-speed {
+  text-align: end;
+  padding-right: 13px;
 }
 
 /* wind arrows */
@@ -130,4 +295,10 @@ body {
 }
 
 .wind-dir {
+}
+
+/* invisible */
+
+.invisible {
+  display: none;
 }

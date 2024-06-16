@@ -1,5 +1,5 @@
 import loading from "./loading.gif"
-import arrow from "./arrow-up.svg"
+import arrow from "./wind-icon1.svg"
 
 export const display = (function () {
   function loadingScreen() {
@@ -59,16 +59,18 @@ export const display = (function () {
     }
   }
   //toggle functions
-  function toggleCurrentOrForecast() {
+  function toggleCurrentOrForecast(event) {
     const currentContainer = document.querySelector(".current-container")
     const forecastContainer = document.querySelector(".forecast-container")
 
     if (currentContainer.classList.contains("invisible")) {
       currentContainer.classList.remove("invisible")
       forecastContainer.classList.add("invisible")
+      event.target.textContent = "Forecast"
     } else {
       currentContainer.classList.add("invisible")
       forecastContainer.classList.remove("invisible")
+      event.target.textContent = "Current"
     }
   }
 
@@ -87,6 +89,7 @@ export const display = (function () {
       windHeaders.forEach((header) => {
         header.textContent = "Wind (m/s)"
       })
+      setUnitBtnText(currentUnitType)
     } else {
       tempHeaders.forEach((header) => {
         header.textContent = "Temp. °F"
@@ -97,8 +100,10 @@ export const display = (function () {
       windHeaders.forEach((header) => {
         header.textContent = "Wind (mph)"
       })
+      setUnitBtnText(currentUnitType)
     }
   }
+
   //main render functions
   function displayCurrent(data, unitType) {
     const current = data["current"]
@@ -150,11 +155,11 @@ export const display = (function () {
     )
     //display unit-specific data
     if (unitType === "metric") {
-      renderForecastText(forecastEls().temps, data["tempCarr"])
+      renderForecastTemps(forecastEls().temps, data["tempCarr"])
       renderForecastText(forecastEls().precips, data["precipMmArr"])
       renderForecastWindSpeedMs(forecastEls().windSpeeds, data["windKphArr"])
     } else {
-      renderForecastText(forecastEls().temps, data["tempFarr"])
+      renderForecastTemps(forecastEls().temps, data["tempFarr"])
       renderForecastText(forecastEls().precips, data["precipInArr"])
       renderForecastWindSpeedMs(forecastEls().windSpeeds, data["windMphArr"])
     }
@@ -165,11 +170,25 @@ export const display = (function () {
     resetFirstDayVisibility(firstDayHoursNodeList)
     hideOlderThanCurrentHour(firstDayHoursNodeList)
   }
+
   //render helper functions
   function renderForecastText(nodeList, dataArr) {
     nodeList.forEach((node, index) => {
       node.textContent = dataArr[index]
     })
+  }
+
+  function renderForecastTemps(nodeList, tempsArr) {
+    nodeList.forEach((node, index) => {
+      node.textContent = `${tempsArr[index]}°`
+      setColdClassForForecastTemps(tempsArr[index], node)
+    })
+  }
+
+  function setColdClassForForecastTemps(tempValue, node) {
+    if (tempValue > 0) {
+      node.classList.add("warm")
+    }
   }
 
   function renderForecastConditions(nodeList, imgArr, textArr) {
@@ -197,6 +216,14 @@ export const display = (function () {
     return Math.round(Number(numOrNumString) / 3.6)
   }
 
+  function setUnitBtnText(unitType) {
+    const unitBtn = document.querySelector(".btn-toggle-unit")
+    if (unitType === "metric") {
+      unitBtn.textContent = "Imperial"
+      return
+    }
+    unitBtn.textContent = "Metric"
+  }
   //old info filter
   function resetFirstDayVisibility(hoursNodeList) {
     hoursNodeList.forEach((hourContainer) => {
@@ -227,8 +254,8 @@ export const display = (function () {
     console.log(currentCondition)
     let image
 
-    if (currentCondition.includes("rain")) {
-      image = background.rainy
+    if (currentCondition.includes("thunder")) {
+      image = background.thunder
     } else if (
       currentCondition.includes("overcast") ||
       currentCondition.includes("cloudy")
@@ -238,8 +265,10 @@ export const display = (function () {
       image = background.sunny
     } else if (currentCondition.includes("clear")) {
       image = background.nightClear
-    } else if (currentCondition.includes("thunder")) {
-      image = background.thunder
+    } else if (currentCondition.includes("rain")) {
+      image = background.rainy
+    } else if (currentCondition.includes("snow")) {
+      image = background.snow
     } else {
       image = background.sunny
     }
@@ -258,6 +287,7 @@ export const display = (function () {
       "https://images.pexels.com/photos/25606279/pexels-photo-25606279/free-photo-of-stars-on-night-sky-over-sea-coast.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
     thunder:
       "https://images.pexels.com/photos/1118869/pexels-photo-1118869.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+    snow: "https://images.pexels.com/photos/1003124/pexels-photo-1003124.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
   }
 
   return {
@@ -266,5 +296,6 @@ export const display = (function () {
     toggleUnitHeaders,
     displayCurrent,
     displayForecast,
+    setUnitBtnText,
   }
 })()

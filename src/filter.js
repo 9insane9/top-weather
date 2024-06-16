@@ -53,7 +53,7 @@ export const filter = (function () {
 
     allDays.forEach((day) => {
       day["hour"].forEach((hour) => {
-        parameterArr.push(`0 - ${hour[parameter]}`)
+        parameterArr.push(`0 - ${hour[parameter].toFixed(1)}`)
       })
     })
 
