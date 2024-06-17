@@ -2,16 +2,42 @@ import loading from "./loading.gif"
 import arrow from "./wind-icon1.svg"
 
 export const display = (function () {
+  //loading screen
   function loadingScreen() {
+    const loadingDialogContainer = document.querySelector(".loading-container")
     const loadingDialog = document.querySelector(".loading")
     const loadingGif = document.querySelector(".loading-gif")
     loadingGif.src = loading
 
+    loadingDialogContainer.classList.remove("invisible")
     loadingDialog.classList.remove("invisible")
     loadingDialog.showModal()
-    setTimeout(() => loadingDialog.close(), 1000)
-    setTimeout(() => loadingDialog.classList.add("invisible"), 1000)
+    loadingScreenText()
+
+    setTimeout(() => {
+      loadingDialog.close()
+      loadingDialog.classList.add("invisible")
+      loadingDialogContainer.classList.add("invisible")
+    }, 1000)
   }
+
+  function loadingScreenText() {
+    const loadingTextEl = document.querySelector(".loading-text")
+
+    setTimeout(() => {
+      loadingTextEl.textContent = "Loading."
+    }, 200)
+    setTimeout(() => {
+      loadingTextEl.textContent = "Loading.."
+    }, 400)
+    setTimeout(() => {
+      loadingTextEl.textContent = "Loading..."
+    }, 600)
+    setTimeout(() => {
+      loadingTextEl.textContent = "Loading"
+    }, 1100)
+  }
+
   // elements
   function currentEls() {
     const name = document.querySelector(".name")
@@ -58,6 +84,7 @@ export const display = (function () {
       windDirs,
     }
   }
+
   //toggle functions
   function toggleCurrentOrForecast(event) {
     const currentContainer = document.querySelector(".current-container")
@@ -224,6 +251,7 @@ export const display = (function () {
     }
     unitBtn.textContent = "Metric"
   }
+
   //old info filter
   function resetFirstDayVisibility(hoursNodeList) {
     hoursNodeList.forEach((hourContainer) => {
@@ -251,7 +279,6 @@ export const display = (function () {
     const htmlEl = document.documentElement
     const currentCondition =
       currentEls().conditionText.textContent.toLowerCase()
-    console.log(currentCondition)
     let image
 
     if (currentCondition.includes("thunder")) {

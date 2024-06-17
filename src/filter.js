@@ -20,6 +20,7 @@ export const filter = (function () {
 
     return filteredData
   }
+
   //helper functions
   function getDatesArr(data) {
     const datesArr = []

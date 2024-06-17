@@ -6,7 +6,7 @@ const searchField = document.querySelector(".search-field")
 const searchBtn = document.querySelector(".search-btn")
 
 const searchSaver = (function () {
-  let term = "tartu estonia"
+  let term = null
 
   return {
     get: function () {
@@ -66,7 +66,7 @@ const errorHandler = (function () {
 
 initialize()
 
-async function fetchCurrent(searchTerm = "London") {
+async function fetchCurrent(searchTerm) {
   try {
     const link = `https://api.weatherapi.com/v1/current.json?key=f80d0c3108cc4ceea9f122718243005&q=${searchTerm}&aqi=no`
     const response = await fetch(link, { mode: "cors" })
@@ -76,7 +76,6 @@ async function fetchCurrent(searchTerm = "London") {
     }
 
     const responseObj = await response.json()
-    console.log(responseObj)
     return responseObj
   } catch (error) {
     console.error("Error fetching current weather:", error.message)
@@ -84,7 +83,7 @@ async function fetchCurrent(searchTerm = "London") {
   }
 }
 
-async function fetchForecast(searchTerm = "London") {
+async function fetchForecast(searchTerm) {
   try {
     const link = `https://api.weatherapi.com/v1/forecast.json?key=f80d0c3108cc4ceea9f122718243005&q=${searchTerm}&days=3&aqi=no&alerts=no`
     const response = await fetch(link, { mode: "cors" })
@@ -117,6 +116,7 @@ async function initialize() {
 
   //attach event listeners
   searchField.oninput = validateSearch
+  searchField.addEventListener("keypress", (event) => searchWithEnterKey(event))
   searchBtn.addEventListener("click", search)
   unitBtn.addEventListener("click", toggleUnits)
   currentOrforecastBtn.addEventListener(
@@ -126,7 +126,6 @@ async function initialize() {
 
   //fetch and display data
   const ip = await getClientIP()
-  // const test = "tartu"
   searchSaver.set(ip)
   fetchCurrent(ip)
     .then((data) => setUnitBasedOnLocation(data))
@@ -141,26 +140,38 @@ async function search() {
   display.loadingScreen()
   errorHandler.reset()
   searchSaver.set(searchField.value)
+  searchField.value = ""
 
   const searchTerm = searchSaver.get()
   const currentUnitType = unitType.get()
 
-  fetchCurrent(searchTerm)
-    .then((data) => display.displayCurrent(data, currentUnitType))
-    .catch((data) => {
-      errorHandler.handle(data)
-    })
+  if (searchTerm) {
+    fetchCurrent(searchTerm)
+      .then((data) => display.displayCurrent(data, currentUnitType))
+      .catch((data) => {
+        errorHandler.handle(data)
+      })
 
-  fetchForecast(searchTerm)
-    .then((data) => filter.getFilteredForecast(data))
-    .then((data) => display.displayForecast(data, currentUnitType))
-    .catch((data) => {
-      errorHandler.handle(data)
-    })
+    fetchForecast(searchTerm)
+      .then((data) => filter.getFilteredForecast(data))
+      .then((data) => display.displayForecast(data, currentUnitType))
+      .catch((data) => {
+        errorHandler.handle(data)
+      })
+    validateSearch()
+    return
+  }
+  console.log("No search term saved!")
+}
+
+function searchWithEnterKey(event) {
+  if (event.keyCode === 13) {
+    search()
+  }
 }
 
 function validateSearch() {
-  if (searchField.value === "") {
+  if (searchField.value.trim() === "") {
     searchBtn.setAttribute("disabled", "disabled")
     return
   }
